@@ -1,0 +1,20 @@
+<main>
+  <div class = "container">
+        <div class="card-desk mx-4 mb-5 text-center" *ngFor="let membre of membres$ | async">
+          <div class="card">
+            <div class="card-header">
+              <h4 class="my-0 font-weight-normal">{{membre.prenom}} {{membre.nom}}</h4>
+            </div>
+            <div class="card-body">
+              <h2 class="mt-3 mb-4">
+                Solde : {{membre.solde}} €
+              </h2>
+              <button routerLink="/membres/{{ membre.id }}" type="button"
+                      class="btn btn-lg btn-block btn-outline-primary">
+                Le détails des achats
+              </button>
+            </div>
+          </div>
+      </div>
+  </div>
+</main>

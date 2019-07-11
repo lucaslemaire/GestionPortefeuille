@@ -1,0 +1,927 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Serveur des dépenses partagées",
+        "description": "Utilisation d'un serveur REST",
+        "contact": {
+            "email": "fred.hemery@univ-artois.fr"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000/api",
+            "description": "Le serveur pour les dépenses partagées"
+        }
+    ],
+    "paths": {
+        "/register": {
+            "post": {
+                "tags": [
+                    "Membres"
+                ],
+                "summary": "Enregistrement d'un membre",
+                "description": "Enregistrement d'un membre",
+                "operationId": "register",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nom": {
+                                        "type": "string"
+                                    },
+                                    "prenom": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "nom": "Duchmol",
+                                    "prenom": "Robert",
+                                    "email": "robert.duchmol@domain.com",
+                                    "password": "secret"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "422": {
+                        "description": "SQL Error or Missing mandatory field"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "tags": [
+                    "Membres"
+                ],
+                "summary": "connexion d'un membre",
+                "operationId": "App\\Http\\Controllers\\API\\AuthController::login",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "email": "robert.duchmol@domain.com",
+                                    "password": "secret"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success: operation Successfully"
+                    },
+                    "401": {
+                        "description": "Refused: Invalid Credentials"
+                    },
+                    "422": {
+                        "description": "Missing mandatory field"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/logout": {
+            "post": {
+                "tags": [
+                    "Membres"
+                ],
+                "summary": "déconnexion d'un membre",
+                "operationId": "App\\Http\\Controllers\\API\\AuthController::logout",
+                "responses": {
+                    "200": {
+                        "description": "Success: operation Successfully"
+                    },
+                    "401": {
+                        "description": "Refused: Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key_security_example": []
+                    }
+                ]
+            }
+        },
+        "/depenses": {
+            "get": {
+                "tags": [
+                    "Depenses"
+                ],
+                "summary": "Renvoie les informations de toutes les dépenses",
+                "description": "Renvoie les dépenses",
+                "operationId": "show",
+                "responses": {
+                    "200": {
+                        "description": "dépense response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "allOf": [
+                                        {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "format": "int64"
+                                                            },
+                                                            "description": {
+                                                                "type": "string"
+                                                            },
+                                                            "date_depense": {
+                                                                "type": "string"
+                                                            },
+                                                            "montant": {
+                                                                "type": "number",
+                                                                "format": "float"
+                                                            },
+                                                            "acheteur": {
+                                                                "type": "object",
+                                                                "allOf": [
+                                                                    {
+                                                                        "properties": {
+                                                                            "id": {
+                                                                                "type": "integer",
+                                                                                "format": "int64"
+                                                                            },
+                                                                            "email": {
+                                                                                "type": "string"
+                                                                            },
+                                                                            "nom": {
+                                                                                "type": "string"
+                                                                            },
+                                                                            "prenom": {
+                                                                                "type": "string"
+                                                                            },
+                                                                            "avatar": {
+                                                                                "type": "string"
+                                                                            }
+                                                                        },
+                                                                        "type": "object"
+                                                                    }
+                                                                ]
+                                                            },
+                                                            "participants": {
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "properties": {
+                                                                        "id": {
+                                                                            "type": "integer",
+                                                                            "format": "int64"
+                                                                        },
+                                                                        "nom": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "prenom": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "avatar": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "created_at": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "updated_at": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "pivot": {
+                                                                            "type": "object",
+                                                                            "allOf": [
+                                                                                {
+                                                                                    "properties": {
+                                                                                        "depense_id": {
+                                                                                            "type": "integer",
+                                                                                            "format": "int64"
+                                                                                        },
+                                                                                        "membre_id": {
+                                                                                            "type": "integer",
+                                                                                            "format": "int64"
+                                                                                        },
+                                                                                        "quote_part": {
+                                                                                            "type": "integer",
+                                                                                            "format": "float"
+                                                                                        }
+                                                                                    },
+                                                                                    "type": "object"
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    },
+                                                                    "type": "object"
+                                                                }
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Resource Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "oauth2_security_example": [
+                            "write:membres",
+                            "read:membres"
+                        ]
+                    }
+                ]
+            }
+        },
+        "/depenses/{id}": {
+            "get": {
+                "tags": [
+                    "Depenses"
+                ],
+                "summary": "Renvoie les informations d'une dépense",
+                "description": "Renvoie les informations d'une dépense",
+                "operationId": "show",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id d'une dépense",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "response: les données d'une dépense",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "allOf": [
+                                        {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "format": "int64"
+                                                },
+                                                "description": {
+                                                    "type": "string"
+                                                },
+                                                "date_depense": {
+                                                    "type": "string"
+                                                },
+                                                "montant": {
+                                                    "type": "number",
+                                                    "format": "float"
+                                                },
+                                                "acheteur": {
+                                                    "type": "object",
+                                                    "allOf": [
+                                                        {
+                                                            "properties": {
+                                                                "id": {
+                                                                    "type": "integer",
+                                                                    "format": "int64"
+                                                                },
+                                                                "email": {
+                                                                    "type": "string"
+                                                                },
+                                                                "nom": {
+                                                                    "type": "string"
+                                                                },
+                                                                "prenom": {
+                                                                    "type": "string"
+                                                                },
+                                                                "avatar": {
+                                                                    "type": "string"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    ]
+                                                },
+                                                "participants": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "format": "int64"
+                                                            },
+                                                            "nom": {
+                                                                "type": "string"
+                                                            },
+                                                            "prenom": {
+                                                                "type": "string"
+                                                            },
+                                                            "avatar": {
+                                                                "type": "string"
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string"
+                                                            },
+                                                            "updated_at": {
+                                                                "type": "string"
+                                                            },
+                                                            "pivot": {
+                                                                "type": "object",
+                                                                "allOf": [
+                                                                    {
+                                                                        "properties": {
+                                                                            "depense_id": {
+                                                                                "type": "integer",
+                                                                                "format": "int64"
+                                                                            },
+                                                                            "membre_id": {
+                                                                                "type": "integer",
+                                                                                "format": "int64"
+                                                                            },
+                                                                            "quote_part": {
+                                                                                "type": "integer",
+                                                                                "format": "float"
+                                                                            }
+                                                                        },
+                                                                        "type": "object"
+                                                                    }
+                                                                ]
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Resource Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "oauth2_security_example": [
+                            "write:membres",
+                            "read:membres"
+                        ]
+                    }
+                ]
+            }
+        },
+        "/depenses/acheteur/{id}": {
+            "get": {
+                "tags": [
+                    "Depenses"
+                ],
+                "summary": "Renvoie les dépenses d'un acheteur",
+                "description": "Renvoie les dépenses d'un acheteur",
+                "operationId": "depensesByAcheteurId",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id de l'acheteur",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "dépense response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "allOf": [
+                                        {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "format": "int64"
+                                                            },
+                                                            "description": {
+                                                                "type": "string"
+                                                            },
+                                                            "date_depense": {
+                                                                "type": "string"
+                                                            },
+                                                            "montant": {
+                                                                "type": "number",
+                                                                "format": "float"
+                                                            },
+                                                            "acheteur": {
+                                                                "type": "object",
+                                                                "allOf": [
+                                                                    {
+                                                                        "properties": {
+                                                                            "id": {
+                                                                                "type": "integer",
+                                                                                "format": "int64"
+                                                                            },
+                                                                            "email": {
+                                                                                "type": "string"
+                                                                            },
+                                                                            "nom": {
+                                                                                "type": "string"
+                                                                            },
+                                                                            "prenom": {
+                                                                                "type": "string"
+                                                                            },
+                                                                            "avatar": {
+                                                                                "type": "string"
+                                                                            }
+                                                                        },
+                                                                        "type": "object"
+                                                                    }
+                                                                ]
+                                                            },
+                                                            "participants": {
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "properties": {
+                                                                        "id": {
+                                                                            "type": "integer",
+                                                                            "format": "int64"
+                                                                        },
+                                                                        "nom": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "prenom": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "avatar": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "created_at": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "updated_at": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "pivot": {
+                                                                            "type": "object",
+                                                                            "allOf": [
+                                                                                {
+                                                                                    "properties": {
+                                                                                        "depense_id": {
+                                                                                            "type": "integer",
+                                                                                            "format": "int64"
+                                                                                        },
+                                                                                        "membre_id": {
+                                                                                            "type": "integer",
+                                                                                            "format": "int64"
+                                                                                        },
+                                                                                        "quote_part": {
+                                                                                            "type": "integer",
+                                                                                            "format": "float"
+                                                                                        }
+                                                                                    },
+                                                                                    "type": "object"
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    },
+                                                                    "type": "object"
+                                                                }
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Resource Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "oauth2_security_example": [
+                            "write:membres",
+                            "read:membres"
+                        ]
+                    }
+                ]
+            }
+        },
+        "/membres/{id}": {
+            "get": {
+                "tags": [
+                    "Membres"
+                ],
+                "summary": "Renvoie les informations d'un membre",
+                "description": "Renvoie les informations d'un membre",
+                "operationId": "show",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id du membre",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "membre response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "allOf": [
+                                        {
+                                            "required": [
+                                                "id"
+                                            ],
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "format": "int64"
+                                                },
+                                                "email": {
+                                                    "type": "string"
+                                                },
+                                                "nom": {
+                                                    "type": "string"
+                                                },
+                                                "prenom": {
+                                                    "type": "string"
+                                                },
+                                                "avatar": {
+                                                    "type": "string"
+                                                },
+                                                "password": {
+                                                    "type": "string"
+                                                },
+                                                "solde": {
+                                                    "type": "number",
+                                                    "format": "float"
+                                                },
+                                                "achats": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "format": "int64"
+                                                            },
+                                                            "description": {
+                                                                "type": "string"
+                                                            },
+                                                            "montant": {
+                                                                "type": "number",
+                                                                "format": "float"
+                                                            },
+                                                            "date_achat": {
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "depenses": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "format": "int64"
+                                                            },
+                                                            "acheteur_id": {
+                                                                "type": "integer",
+                                                                "format": "int64"
+                                                            },
+                                                            "acheteur": {
+                                                                "type": "string"
+                                                            },
+                                                            "description": {
+                                                                "type": "string"
+                                                            },
+                                                            "quote_part": {
+                                                                "type": "number",
+                                                                "format": "float"
+                                                            },
+                                                            "date_depense": {
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Resource Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "oauth2_security_example": [
+                            "write:membres",
+                            "read:membres"
+                        ]
+                    }
+                ]
+            }
+        },
+        "/membres": {
+            "get": {
+                "tags": [
+                    "Membres"
+                ],
+                "summary": "Get list of membres",
+                "description": "Renvoie la liste des membres",
+                "operationId": "index",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "allOf": [
+                                        {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "format": "int64"
+                                                            },
+                                                            "email": {
+                                                                "type": "string"
+                                                            },
+                                                            "nom": {
+                                                                "type": "string"
+                                                            },
+                                                            "prenom": {
+                                                                "type": "string"
+                                                            },
+                                                            "avatar": {
+                                                                "type": "string"
+                                                            },
+                                                            "password": {
+                                                                "type": "string"
+                                                            },
+                                                            "solde": {
+                                                                "type": "number",
+                                                                "format": "float"
+                                                            },
+                                                            "achats": {
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "properties": {
+                                                                        "id": {
+                                                                            "type": "integer",
+                                                                            "format": "int64"
+                                                                        },
+                                                                        "description": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "montant": {
+                                                                            "type": "number",
+                                                                            "format": "float"
+                                                                        },
+                                                                        "date_achat": {
+                                                                            "type": "string"
+                                                                        }
+                                                                    },
+                                                                    "type": "object"
+                                                                }
+                                                            },
+                                                            "depenses": {
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "properties": {
+                                                                        "id": {
+                                                                            "type": "integer",
+                                                                            "format": "int64"
+                                                                        },
+                                                                        "acheteur_id": {
+                                                                            "type": "integer",
+                                                                            "format": "int64"
+                                                                        },
+                                                                        "acheteur": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "description": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "quote_part": {
+                                                                            "type": "number",
+                                                                            "format": "float"
+                                                                        },
+                                                                        "date_depense": {
+                                                                            "type": "string"
+                                                                        }
+                                                                    },
+                                                                    "type": "object"
+                                                                }
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key_security_example": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Depense": {
+                "properties": {
+                    "date_depense": {
+                        "schema": "Depense",
+                        "description": "La date de la dépense",
+                        "type": "date"
+                    },
+                    "montant": {
+                        "schema": "Depense",
+                        "description": "Le montant de la dépense",
+                        "type": "decimal"
+                    },
+                    "description": {
+                        "schema": "Depense",
+                        "description": "Une description de la dépense",
+                        "type": "string"
+                    },
+                    "membre_id": {
+                        "schema": "Depense",
+                        "description": "Le membre quia fait la dépense",
+                        "type": "unsignedinteger"
+                    }
+                },
+                "type": "object"
+            },
+            "Membre": {
+                "properties": {
+                    "nom": {
+                        "schema": "Membre",
+                        "description": "Le nom du membre",
+                        "type": "string"
+                    },
+                    "prenom": {
+                        "schema": "Membre",
+                        "description": "Le prénom du membre",
+                        "type": "string"
+                    },
+                    "avatar": {
+                        "schema": "Membre",
+                        "description": "Une représentation graphique du membre",
+                        "type": "binary"
+                    },
+                    "email": {
+                        "schema": "Membre",
+                        "description": "L'adresse mail du membre. Valeur unique",
+                        "type": "string"
+                    },
+                    "password": {
+                        "schema": "Membre",
+                        "description": "Le mot de passe crypté du membre.",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "Participant": {
+                "properties": {
+                    "membre_id": {
+                        "schema": "Participant",
+                        "description": "Le membre qui participe à la dépense.",
+                        "type": "unsignedinteger"
+                    },
+                    "depense_id": {
+                        "schema": "Participant",
+                        "description": "Identification de la dépense.",
+                        "type": "unsignedinteger"
+                    },
+                    "quote_part": {
+                        "schema": "Participant",
+                        "description": "La quote-part de la dépense pour le membre.",
+                        "type": "decimal"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Authentification",
+            "description": "Operations d'authentification",
+            "externalDocs": {
+                "description": "Find out more about",
+                "url": "http://swagger.io"
+            }
+        },
+        {
+            "name": "depense",
+            "description": "Operations about depense",
+            "externalDocs": {
+                "description": "Find out more about",
+                "url": "http://swagger.io"
+            }
+        }
+    ],
+    "externalDocs": {
+        "description": "Find out more about Swagger",
+        "url": "http://swagger.io"
+    }
+}

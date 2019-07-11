@@ -1,0 +1,22 @@
+<main>
+  <div class = "container">
+    <div class = "menu" style="margin-bottom: 20px">
+      <button id="about" class="btn btn-primary" (click)="toggleAbout()">Détails dépense</button>
+      <button *ngIf = "isOwnerOfDepense()" id="edit" class="btn" (click)="toggleEdit()">Modifier dépense</button>
+      <button *ngIf = "isOwnerOfDepense()" id="delete" class="btn" (click)="toggleDelete()">Supprimer dépense</button>
+    </div>
+
+    <div class = "about" *ngIf="showAbout">
+      <app-about-depense [depense]="depense"></app-about-depense>
+    </div>
+
+    <div class = "edit" *ngIf="showEdit">
+      <app-edit-depense [depense]="depense"></app-edit-depense>
+    </div>
+
+    <div class= "delete" *ngIf="showDelete">
+      <app-delete-depense [depense]="depense"></app-delete-depense>
+    </div>
+
+  </div>
+</main>

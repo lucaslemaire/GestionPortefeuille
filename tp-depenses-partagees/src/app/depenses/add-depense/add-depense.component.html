@@ -1,0 +1,37 @@
+<div *ngIf="showMe">
+  <form [formGroup]="depenseForm" (ngSubmit)="onSubmit()" novalidate>
+    <div class="text-center mb-4">
+      <h3 class="h3 mt-3 mb-3 font-weight-normal">Ajouter une dépense</h3>
+      <hr>
+    </div>
+    <div class="form-group" [ngClass]="{ 'has-error': !date_depense.valid && (date_depense.dirty || date_depense.touched) }">
+      <label for="date_depense">Date de la dépense</label>
+      <input type="date" formControlName="date_depense"  name="date_depense" required class="form-control" id="date_depense" placeholder="Date de la dépense">
+      <div *ngIf="date_depense.invalid && (date_depense.dirty || date_depense.touched)" >
+        <div *ngIf="date_depense?.errors.required">Vous devez spécifier une date</div>
+      </div>
+    </div>
+    <div class="form-group" [ngClass]="{ 'has-error': !montant.valid && (montant.dirty || montant.touched) }">
+      <label for="montant">Montant</label>
+      <input type="text" formControlName="montant"  name="montant" required class="form-control" id="montant" placeholder="Montant">
+      <div *ngIf="montant.invalid && (montant.dirty || montant.touched)" >
+        <div *ngIf="montant?.errors.required">Vous devez spécifier un montant</div>
+        <div *ngIf="montant?.errors.pattern">Le montant doit s'écrire comme suit : x.xx</div>
+      </div>
+    </div>
+    <div class="form-group" [ngClass]="{ 'has-error': !description.valid && (description.dirty || description.touched) }">
+      <label for="description">Description</label>
+      <input type="text" formControlName="description"  name="description" required class="form-control" id="description" placeholder="Description">
+      <div *ngIf="description.invalid && (description.dirty || description.touched)" >
+        <div *ngIf="description?.errors.required">Vous devez spécifier une description</div>
+        <div *ngIf="description?.errors.minlength">La description doit contenir au moins 6 caractères</div>
+        <div *ngIf="description?.errors.maxlength">La description doit contenir au plus 100 caractères</div>
+      </div>
+    </div>
+    <div *ngIf="error" class="alert alert-danger" role="alert">
+      Ops: {{ error.error }}
+    </div>
+    <button [disabled]="!depenseForm.valid" class="btn btn-lg btn-primary btn-success btn-block mt-5" type="submit" style="margin-bottom: 20px">
+      Ajouter la dépense</button>
+  </form>
+</div>

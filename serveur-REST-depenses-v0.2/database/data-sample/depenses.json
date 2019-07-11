@@ -1,0 +1,58 @@
+[
+  {
+    "date_depense": "2018-12-24",
+    "montant": 12.00,
+    "description": "Bonbons",
+    "membre_id": 1,
+    "participants": [
+      {
+        "membre_id": 1,
+        "quote_part": 4.00
+      },
+      {
+        "membre_id": 2,
+        "quote_part": 4.00
+      },
+      {
+        "membre_id": 3,
+        "quote_part": 4.00
+      }
+    ]
+  },
+  {
+    "date_depense": "2018-12-24",
+    "montant": 3.00,
+    "description": "Pates",
+    "membre_id": 2,
+    "participants": [
+      {
+        "membre_id": 1,
+        "quote_part": 1.00
+      },
+      {
+        "membre_id": 2,
+        "quote_part": 1.00
+      },
+      {
+        "membre_id": 3,
+        "quote_part": 1.00
+      }
+    ]
+  },
+  {
+    "date_depense": "2018-12-24",
+    "montant": 8.00,
+    "description": "Vin",
+    "membre_id": 3,
+    "participants": [
+      {
+        "membre_id": 2,
+        "quote_part": 4.00
+      },
+      {
+        "membre_id": 3,
+        "quote_part": 4.00
+      }
+    ]
+  }
+]

@@ -1,0 +1,26 @@
+<main>
+  <div class = "container">
+      <div class="card-desk mx-12 mb-5" *ngIf="membre != null">
+        <div class="card">
+          <div class="card-header text-center">
+            <h3 class="my-0 font-weight-bold">{{membre.prenom}} {{membre.nom}}</h3>
+            <hr>
+            <h4 class = "my0 font-weight-bold"> Solde : {{membre.solde}} € </h4>
+          </div>
+          <div class="card-body">
+            <h5 class="card-text"> Les achats </h5>
+            <ul>
+              <li *ngFor="let a of membre.achats"> {{ a.date_achat }} {{ a.description }} {{ a.montant }}€  </li>
+            </ul>
+
+            <hr>
+
+            <h5 class="card-text"> Les dépenses </h5>
+            <ul>
+              <li *ngFor="let d of membre.depenses"> {{ d.date_depense }} {{ d.acheteur }} {{ d.description }} {{ d.quote_part }}€ </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+</main>

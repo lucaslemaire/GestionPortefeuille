@@ -1,0 +1,25 @@
+<div class="container" *ngIf="depense != undefined">
+  <div class = "row">
+    <div class="col-4">
+      <h2>Dépense de {{ depense.acheteur.prenom }} {{ depense.acheteur.nom }} </h2>
+    </div>
+    <div class="col-8" style="border-style: solid; border-radius: 10px; border-width: 1px; border-color: #cfcfcf; padding: 20px;">
+      <div class="elem">
+        <h5> {{ depense.montant }} € | {{ depense.date_depense }}</h5>
+      </div>
+      <div class="elem">
+        <h5> {{ depense.description }}</h5>
+      </div>
+      <div class="elem">
+        <h6>Les participants</h6>
+        <hr>
+        <div *ngFor="let p of depense.participants">
+          <p><strong>Quote-part:</strong> {{p.prenom}} {{p.nom}} | <strong>{{p.pivot.quote_part}}€</strong> </p>
+          <hr>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <button type="submit" class="btn btn-danger" (click)="onDeleteSubmit()">Confirmer la suppression</button>
+  </div>
+</div>

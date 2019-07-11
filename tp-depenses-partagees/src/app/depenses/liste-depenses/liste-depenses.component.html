@@ -1,0 +1,37 @@
+<main>
+  <div class="container">
+
+    <button class="btn btn-primary btn-success" style="margin-bottom: 20px" (click)="toggleChild()">Ajouter une dépense</button>
+
+    <div class="addDepense">
+      <app-add-depense [showMe]="showVar"></app-add-depense>
+    </div>
+
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th scope="col">Acheteur</th>
+        <th scope="col" sortable="name">Montant</th>
+        <th scope="col" sortable="area">Date</th>
+        <th scope="col" sortable="population">Action</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let d of depenses$ | async">
+        <th scope="row">{{ d.acheteur.nom }}  {{d.acheteur.prenom}}</th>
+        <td>
+          {{ d.montant }} €
+        </td>
+        <td>{{ d.date_depense }}</td>
+        <td>
+          <button routerLink="/depenses/{{ d.id }}" type="button"
+                  class = "btn btn-primary">
+            Détails
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+

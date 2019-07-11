@@ -1,0 +1,123 @@
+<div class="container" *ngIf="depense != undefined">
+  <form [formGroup]="editForm" (ngSubmit)="onSubmit()" novalidate>
+    <div class="text-center mb-4">
+      <h3 class="h3 mt-3 mb-3 font-weight-normal">Modifier la dépense</h3>
+      <hr>
+    </div>
+    <div class="form-group" [ngClass]="{ 'has-error': !date_depense.valid && (date_depense.dirty || date_depense.touched) }">
+      <label for="date_depense">Date de la dépense</label>
+      <input type="date" formControlName="date_depense"  name="date_depense" required class="form-control" id="date_depense" placeholder="Date de la dépense" value="{{depense.date_depense}}">
+      <div *ngIf="date_depense.invalid && (date_depense.dirty || date_depense.touched)" >
+        <div *ngIf="date_depense?.errors.required">Vous devez spécifier une date</div>
+      </div>
+    </div>
+    <div class="form-group" [ngClass]="{ 'has-error': !montant.valid && (montant.dirty || montant.touched) }">
+      <label for="montant">Montant</label>
+      <input type="text" formControlName="montant"  name="montant" required class="form-control" id="montant" placeholder="Montant" value="{{depense.montant}}">
+      <div *ngIf="montant.invalid && (montant.dirty || montant.touched)" >
+        <div *ngIf="montant?.errors.required">Vous devez spécifier un montant</div>
+        <div *ngIf="montant?.errors.pattern">Le montant doit s'écrire comme suit : x.xx</div>
+      </div>
+    </div>
+    <div class="form-group" [ngClass]="{ 'has-error': !description.valid && (description.dirty || description.touched) }">
+      <label for="description">Description</label>
+      <input type="text" formControlName="description"  name="description" required class="form-control" id="description" placeholder="Description" value="{{depense.description}}">
+      <div *ngIf="description.invalid && (description.dirty || description.touched)" >
+        <div *ngIf="description?.errors.required">Vous devez spécifier une description</div>
+        <div *ngIf="description?.errors.minlength">La description doit contenir au moins 6 caractères</div>
+        <div *ngIf="description?.errors.maxlength">La description doit contenir au plus 100 caractères</div>
+      </div>
+    </div>
+    <div class="form-group" [ngClass]="{ 'has-error': !acheteur.valid && (acheteur.dirty || acheteur.touched)}">
+      <label for="acheteur">Acheteur</label>
+      <select formControlName="acheteur" name="acheteur" required class="form-control" id="acheteur" placeholder="Acheteur" value="{{currentUser}}">
+        <option *ngFor="let m of membres$ | async" value="{{m.id}}">{{m.prenom}} {{m.nom}}</option>
+      </select>
+    </div>
+    <div *ngIf="error" class="alert alert-danger" role="alert">
+      Ops: {{ error.error }}
+    </div>
+    <button [disabled]="!editForm.valid" class="btn btn-lg btn-primary btn-success btn-block mt-5" type="submit" style="margin-bottom: 20px">
+      Modifier la dépense</button>
+  </form>
+
+  <hr>
+
+  <div *ngIf="depense.participants.length > 0">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th scope="col">Acheteur</th>
+        <th scope="col">Quote-part</th>
+        <th scope="col">Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let p of depense.participants">
+        <th scope="row">{{p.prenom}} {{p.nom}}</th>
+        <td>
+          {{p.pivot.quote_part}} €
+        </td>
+        <td>
+          <button type="button" class="btn btn-warning" style="margin-right: 10px"><fa-icon [icon]="faEdit"></fa-icon></button>
+          <button type="button" class="btn btn-danger" (click)="open(deleteParticipant, p)"><fa-icon [icon]="faTrashAlt"></fa-icon></button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <button type="button" class="btn btn-outline-primary" (click)="open(addParticipant)">Ajouter un participant</button>
+
+  <hr>
+
+  <ng-template #addParticipant let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Ajout d'un participant</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="addForm" (ngSubmit)="onAddSubmit(); modal.close('ajout d\'un participant')" novalidate>
+        <div class="form-group" [ngClass]="{ 'has-error': !quote_part.valid && (quote_part.dirty || quote_part.touched) }">
+          <label for="quote_part">Quote part</label>
+          <input type="text" formControlName="quote_part"  name="quote_part" required class="form-control" id="quote_part" placeholder="Quote part">
+          <div *ngIf="quote_part.invalid && (quote_part.dirty || quote_part.touched)" >
+            <div *ngIf="quote_part?.errors.required">Vous devez spécifier un montant</div>
+          </div>
+        </div>
+        <div class="form-group" [ngClass]="{ 'has-error': !membre_id.valid && (membre_id.dirty || membre_id.touched)}">
+          <label for="membre_id">Participant</label>
+          <select formControlName="membre_id" name="membre_id" required class="form-control" id="membre_id" placeholder="Membre id">
+            <option *ngFor="let m of membres$ | async" value="{{m.id}}">{{m.prenom}} {{m.nom}}</option>
+          </select>
+        </div>
+        <div *ngIf="error" class="alert alert-danger" role="alert">
+          Ops: {{ error.error }}
+        </div>
+        <button [disabled]="!addForm.valid" class="btn btn-lg btn-primary btn-success btn-block mt-5" type="submit" style="margin-bottom: 20px">
+          Ajouter un participant</button>
+      </form>
+    </div>
+  </ng-template>
+
+
+  <!-- TODO
+  <ng-template #deleteParticipant let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="d-modal-basic-title">Suppression d'un participant</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form (ngSubmit)="onDeleteSubmit(modal.p); modal.close('suppression d\'un participant')" novalidate>
+        <button class="btn btn-lg btn-primary btn-danger btn-block mt-5" type="submit" style="margin-bottom: 20px">
+          Supprimer {{p.nom}}</button>
+      </form>
+    </div>
+  </ng-template>
+  -->
+
+</div>
